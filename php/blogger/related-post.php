@@ -10,19 +10,17 @@ define('MAX_RESULT_FEED', 6);
 // without trailing slash
 define('BLOG_DOMAIN', 'notes.rioastamal.net');
 
-// We output as text/javascript MIME
-header('Content-type: application/x-javascript');
+// We output as text/html
+header('Content-type: text/html');
 
 include(BASE_PATH . '/libs/rayap.php');
-include(BASE_PATH . '/libs/js_functions.php');
 
 // Article that user is viewing will send us list of it's tag in query string 
 // such as ?tags=foo,bar. So we need to parse those tags.
 $tags = (isset($_GET['tags']) ? $_GET['tags'] : '');
 
 if (strlen($tags) === 0) {
-	echo ('var blogger_related_post_output = \'\'' . "\n");
-	exit(1);
+	exit('&nbsp;');
 }
 
 // base URL for querying the label
@@ -88,13 +86,12 @@ foreach ($tags as $tag) {
 }
 
 // ok we got all the related post it's time to send it back to the user
-$js = 'var blogger_related_post_output = \'\';' . "\n";
 if (count($relateds) > 0) {
-	$js .= 'blogger_related_post_output += \'<h3 class="related-post-title">Related Posts</h3>\';' . "\n";
-	$js .= 'blogger_related_post_output += \'<ul class="related-post">\';' . "\n";
+	echo('<h3>Related Posts</h3>');
+	echo('<ul class="related-post">');
 	foreach ($relateds as $related) {
-		$js .= sprintf('blogger_related_post_output += \'<li><a href="%s">%s</a></li>\';' . "\n", $related['link'], htmlentities($related['title']));
+		echo(sprintf('<li><a href="%s">%s</a></li>', $related['link'], $related['title']));
 	}
-	$js .= 'blogger_related_post_output += \'</ul>\';' . "\n";
+	echo('</ul>');
 }
-echo $js;
+
