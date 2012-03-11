@@ -26,7 +26,7 @@ if (strlen($tags) === 0) {
 
 // base URL for querying the label
 $blogger_feed_url = 'http://%s/feeds/posts/default/-/%s?alt=json&max-results=%d';
-$id = $_GET['id'];
+$id = @$_GET['id'];
 
 // variabel for holding the result
 $relateds = array();
