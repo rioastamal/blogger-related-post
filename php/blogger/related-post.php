@@ -21,7 +21,8 @@ include(BASE_PATH . '/libs/js_functions.php');
 $tags = (isset($_GET['tags']) ? $_GET['tags'] : '');
 
 if (strlen($tags) === 0) {
-	JS::write('<p><em>No related post.</em></p>');
+	echo ('var blogger_related_post_output = \'\'' . "\n");
+	exit(1);
 }
 
 // base URL for querying the label
@@ -87,12 +88,13 @@ foreach ($tags as $tag) {
 }
 
 // ok we got all the related post it's time to send it back to the user
+$js = 'var blogger_related_post_output = \'\';' . "\n";
 if (count($relateds) > 0) {
-	JS::write('<h3>Related Posts</h3>');
-	JS::write('<ul class="related-post">');
+	$js .= 'blogger_related_post_output += \'<h3 class="related-post-title">Related Posts</h3>\';' . "\n";
+	$js .= 'blogger_related_post_output += \'<ul class="related-post">\';' . "\n";
 	foreach ($relateds as $related) {
-		JS::write(sprintf('<li><a href="%s">%s</a></li>', $related['link'], $related['title']));
+		$js .= sprintf('blogger_related_post_output += \'<li><a href="%s">%s</a></li>\'' . "\n", $related['link'], htmlentities($related['title']));
 	}
-	JS::write('</ul>');
+	$js .= 'blogger_related_post_output += \'</ul>\'' . "\n";
 }
-
+echo $js;
