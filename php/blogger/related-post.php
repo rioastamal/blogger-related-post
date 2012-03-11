@@ -93,8 +93,8 @@ if (count($relateds) > 0) {
 	$js .= 'blogger_related_post_output += \'<h3 class="related-post-title">Related Posts</h3>\';' . "\n";
 	$js .= 'blogger_related_post_output += \'<ul class="related-post">\';' . "\n";
 	foreach ($relateds as $related) {
-		$js .= sprintf('blogger_related_post_output += \'<li><a href="%s">%s</a></li>\'' . "\n", $related['link'], htmlentities($related['title']));
+		$js .= sprintf('blogger_related_post_output += \'<li><a href="%s">%s</a></li>\';' . "\n", $related['link'], htmlentities($related['title']));
 	}
-	$js .= 'blogger_related_post_output += \'</ul>\'' . "\n";
+	$js .= 'blogger_related_post_output += \'</ul>\';' . "\n";
 }
 echo $js;
