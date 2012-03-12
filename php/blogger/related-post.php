@@ -10,9 +10,6 @@ define('MAX_RESULT_FEED', 6);
 // without trailing slash
 define('BLOG_DOMAIN', 'notes.rioastamal.net');
 
-// We output as text/html
-header('Content-type: text/html');
-
 include(BASE_PATH . '/libs/rayap.php');
 
 // Article that user is viewing will send us list of it's tag in query string 
@@ -79,19 +76,34 @@ foreach ($tags as $tag) {
 		// we user associative array so PHP can overwrite the duplicate post
 		// automatically since there's a big chance some post has the same label
 		$relateds[$post_id] = array(
-			'title' => $post_title,
+			'title' => htmlentities($post_title),
 			'link' => $post_link
 		);
 	}
 }
 
-// ok we got all the related post it's time to send it back to the user
-if (count($relateds) > 0) {
-	echo('<h3>Related Posts</h3>');
-	echo('<ul class="related-post">');
-	foreach ($relateds as $related) {
-		echo(sprintf('<li><a href="%s">%s</a></li>', $related['link'], $related['title']));
-	}
-	echo('</ul>');
+$format = (isset($_GET['format']) ? $_GET['format'] : 'json');
+
+if ($format === 'json') {
+	// We output as text/html
+	header('Content-type: application/json');
+	
+	// remove the id
+	$all_relateds = array_values($relateds);
+	echo json_encode($all_relateds);
 }
 
+if ($format === 'html') {
+	// We output as text/html
+	header('Content-type: text/html');
+	
+	// ok we got all the related post it's time to send it back to the user
+	if (count($relateds) > 0) {
+		echo('<h3>Related Posts</h3>');
+		echo('<ul class="related-post">');
+		foreach ($relateds as $related) {
+			echo(sprintf('<li><a href="%s">%s</a></li>', $related['link'], $related['title']));
+		}
+		echo('</ul>');
+	}
+}
