@@ -6,9 +6,16 @@
  * @license GNU GPL v2
  */
 define('BASE_PATH', realpath(dirname(__FILE__) . '/../../'));
-define('MAX_RESULT_FEED', 6);
-// without trailing slash
-define('BLOG_DOMAIN', 'notes.rioastamal.net');
+if (isset($_GET['max'])) {
+	define('MAX_RESULT_FEED', (int)$_GET['max']);
+} else {
+	define('MAX_RESULT_FEED', 6);
+}
+if (isset($_GET['domain'])) {
+	define('BLOG_DOMAIN', $_GET['domain']);
+} else {
+	define('BLOG_DOMAIN', 'notes.rioastamal.net');
+}
 
 include(BASE_PATH . '/libs/rayap.php');
 
