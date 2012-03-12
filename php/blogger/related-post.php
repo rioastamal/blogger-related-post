@@ -116,3 +116,25 @@ if ($format === 'html') {
 		echo('</ul>');
 	}
 }
+
+if ($format === 'htmljsonp') {
+	// We output as text/html
+	header('Content-type: application/json');
+	
+	// ok we got all the related post it's time to send it back to the user
+	$out = '';
+	if (count($related) > 0) {
+		$out .= '<h3>Related Posts</h3>';
+		$out .= '<ul class="related-post">';
+		foreach ($related as $_related) {
+			$out .= sprintf('<li><a href="%s">%s</a></li>', $_related['link'], $_related['title']);
+		}
+		$out .= '</ul>';
+	}
+	
+	$json = new stdClass();
+	$json->data = $out;
+	$encoded = json_encode($json);
+	
+	printf('update_related_post_data(%s);', $encoded);
+}
