@@ -25,7 +25,7 @@ $blogger_feed_url = 'http://%s/feeds/posts/default/-/%s?alt=json&max-results=%d'
 $id = @$_GET['id'];
 
 // variabel for holding the result
-$relateds = array();
+$related = array();
 // instance rayap's object
 $rayap = new Rayap();
 
@@ -75,7 +75,7 @@ foreach ($tags as $tag) {
 		// fill the array $related vars with above values
 		// we user associative array so PHP can overwrite the duplicate post
 		// automatically since there's a big chance some post has the same label
-		$relateds[$post_id] = array(
+		$related[$post_id] = array(
 			'title' => htmlentities($post_title),
 			'link' => $post_link
 		);
@@ -89,8 +89,17 @@ if ($format === 'json') {
 	header('Content-type: application/json');
 	
 	// remove the id
-	$all_relateds = array_values($relateds);
+	$all_relateds = array_values($related);
 	echo json_encode($all_relateds);
+}
+
+if ($format === 'jsonp') {
+	// We output as text/html
+	header('Content-type: application/json');
+	
+	// remove the id
+	$all_relateds = array_values($related);
+	printf('update_related_post_data(%s);', json_encode($all_relateds));
 }
 
 if ($format === 'html') {
@@ -98,11 +107,11 @@ if ($format === 'html') {
 	header('Content-type: text/html');
 	
 	// ok we got all the related post it's time to send it back to the user
-	if (count($relateds) > 0) {
+	if (count($related) > 0) {
 		echo('<h3>Related Posts</h3>');
 		echo('<ul class="related-post">');
-		foreach ($relateds as $related) {
-			echo(sprintf('<li><a href="%s">%s</a></li>', $related['link'], $related['title']));
+		foreach ($related as $_related) {
+			echo(sprintf('<li><a href="%s">%s</a></li>', $_related['link'], $_related['title']));
 		}
 		echo('</ul>');
 	}
